@@ -8,8 +8,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="Mi Agenda"/>
 <title>Mi Agenda Mágica ✨</title>
-<link rel="manifest" href="manifest.json"/>
-<link rel="apple-touch-icon" href="icon-192.png"/>
+<link rel="manifest" href="./manifest.json"/>
+<link rel="apple-touch-icon" href="./icon-192.png"/>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet"/>
 <style>
 :root{--p:#6d28d9;--pl:#ede9fe;--pm:#8b5cf6;--g:#059669;--gl:#d1fae5;--a:#d97706;--al:#fef3c7;--r:#dc2626;--rl:#fee2e2;--bg:#f5f3ff;--card:#fff;--tx:#1e1b4b;--tx2:#6b7280;--bd:#e5e7eb;--rad:15px;--sh:0 2px 14px rgba(109,40,217,.09)}
@@ -637,7 +637,7 @@ init();
 // ── SERVICE WORKER ─────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
+    navigator.serviceWorker.register('/mi-agenda/sw.js')
       .then(r => console.log('SW registrado:', r.scope))
       .catch(e => console.log('SW error:', e));
   });

@@ -1,52 +1,60 @@
-const CACHE = 'agenda-magica-v1';
+const CACHE = 'agenda-v3';
+const BASE = '/mi-agenda';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png',
-  'https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap'
+  BASE + '/',
+  BASE + '/index.html',
+  BASE + '/manifest.json',
+  BASE + '/icon-192.png',
+  BASE + '/icon-512.png',
 ];
 
-// Instalar: guardar archivos en caché
+// Instalar: pre-cachear todos los archivos de la app
 self.addEventListener('install', e => {
+  self.skipWaiting();
   e.waitUntil(
     caches.open(CACHE).then(cache => {
-      // Cachear assets locales; ignorar errores en fuentes externas
-      return Promise.allSettled(ASSETS.map(url => cache.add(url).catch(() => {})));
+      return Promise.all(
+        ASSETS.map(url =>
+          cache.add(url).catch(err => console.warn('No se pudo cachear:', url, err))
+        )
+      );
     })
   );
-  self.skipWaiting();
 });
 
-// Activar: limpiar cachés viejas
+// Activar: eliminar cachés viejas
 self.addEventListener('activate', e => {
+  self.clients.claim();
   e.waitUntil(
     caches.keys().then(keys =>
       Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
     )
   );
-  self.clients.claim();
 });
 
-// Fetch: servir desde caché primero, luego red
+// Fetch: caché primero, luego red — funciona 100% offline
 self.addEventListener('fetch', e => {
+  // Solo manejar peticiones GET
+  if (e.request.method !== 'GET') return;
+
   e.respondWith(
     caches.match(e.request).then(cached => {
       if (cached) return cached;
-      return fetch(e.request).then(response => {
-        // Cachear respuestas válidas de nuestra misma origen
-        if (response && response.status === 200 && e.request.url.startsWith(self.location.origin)) {
+
+      return fetch(e.request)
+        .then(response => {
+          if (!response || response.status !== 200) return response;
+          // Guardar en caché para la próxima vez
           const clone = response.clone();
           caches.open(CACHE).then(cache => cache.put(e.request, clone));
-        }
-        return response;
-      }).catch(() => {
-        // Sin conexión y sin caché: devolver index.html
-        if (e.request.destination === 'document') {
-          return caches.match('/index.html');
-        }
-      });
+          return response;
+        })
+        .catch(() => {
+          // Sin conexión: devolver index.html para cualquier navegación
+          if (e.request.destination === 'document') {
+            return caches.match(BASE + '/index.html');
+          }
+        });
     })
   );
 });
