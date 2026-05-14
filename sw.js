@@ -1,4 +1,4 @@
-const CACHE = 'agenda-v3';
+const CACHE = 'agenda-v5';
 const BASE = '/mi-agenda';
 const ASSETS = [
   BASE + '/',
