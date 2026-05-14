@@ -44,7 +44,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);displa
 .rt{font-size:24px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
 .rs{font-size:9px;opacity:.72}
 .hbadge{border-radius:8px;padding:4px 11px;margin:4px 0;font-size:11px;font-weight:700;position:relative;z-index:1;display:inline-block}
-.hb-red{background:rgba(220,38,38,.82)}.hb-green{background:rgba(5,150,105,.75)}
+.hb-red{background:rgba(220,38,38,.82)}.hb-green{background:rgba(5,150,105,.75)}.hb-amber{background:rgba(217,119,6,.8)}
 .ctrl{display:flex;gap:6px;justify-content:center;margin-top:8px;flex-wrap:wrap;position:relative;z-index:1}
 .btn{border:none;border-radius:50px;padding:8px 15px;font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;cursor:pointer;transition:transform .1s,opacity .15s;display:flex;align-items:center;gap:4px;white-space:nowrap}
 .btn:active{transform:scale(.92)}.btn:disabled{opacity:.3;cursor:not-allowed;transform:none}
@@ -100,6 +100,25 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);displa
 .star-row{display:flex;align-items:center;gap:8px;background:var(--al);border-radius:12px;padding:10px 12px;margin-bottom:8px;flex-wrap:wrap}
 .star-row label{font-size:12px;font-weight:700;flex:1;min-width:100px}
 .star-in{width:58px;padding:6px;border-radius:8px;border:1.5px solid var(--bd);font-size:15px;font-weight:700;text-align:center;font-family:'Nunito',sans-serif;-webkit-appearance:none}
+/* bonus editor */
+.bonus-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd);flex-wrap:wrap}
+.bonus-em{font-size:22px;min-width:28px}
+.bonus-info{flex:1}
+.bonus-lbl{font-size:12px;font-weight:700}
+.bonus-sub{font-size:10px;color:var(--tx2)}
+.bonus-inputs{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.bonus-in{width:54px;padding:5px 7px;border-radius:8px;border:1.5px solid var(--bd);font-size:13px;font-weight:700;text-align:center;font-family:'Nunito',sans-serif;-webkit-appearance:none}
+.bonus-in:focus{border-color:var(--p);outline:none}
+/* alarm settings */
+.vol-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)}
+.vol-label{font-size:12px;font-weight:700;min-width:60px}
+.vol-slider{flex:1;-webkit-appearance:none;height:6px;border-radius:3px;background:var(--bd);outline:none}
+.vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--p);cursor:pointer}
+.tone-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:8px}
+.tone-btn{padding:8px 10px;border-radius:10px;border:1.5px solid var(--bd);background:#fff;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;color:var(--tx);transition:all .15s;text-align:center}
+.tone-btn.sel{border-color:var(--p);background:var(--pl);color:var(--p)}
+/* notification banner */
+.notif-banner{background:var(--al);border-radius:12px;padding:10px 13px;margin-bottom:9px;font-size:12px;font-weight:700;color:#92400e;display:flex;align-items:center;gap:8px}
 .ov{position:fixed;inset:0;background:rgba(0,0,0,.52);display:flex;align-items:flex-end;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .22s}
 .ov.open{opacity:1;pointer-events:all}
 .mod{background:#fff;border-radius:20px 20px 0 0;padding:16px 14px 28px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .27s ease;max-height:90vh;overflow-y:auto}
@@ -139,7 +158,10 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);displa
     <div id="editDayTabs"></div>
     <div id="ec"></div>
     <button class="btn bp" style="width:100%;justify-content:center;margin-top:6px" onclick="openAddAct()">➕ Agregar Actividad</button>
-    <div style="margin-top:10px"><button class="btn bblk bsm" onclick="openPinChange()">🔐 Cambiar PIN parental</button></div>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn bblk bsm" onclick="openPinChange()">🔐 Cambiar PIN</button>
+      <button class="btn bblk bsm" onclick="openAlarmSettings()">🔔 Config. Alarmas</button>
+    </div>
   </div>
   <div class="page" id="page-rewards"><div id="rc"></div></div>
 </div>
@@ -162,7 +184,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);displa
       <div class="fg"><label class="fl">Hora inicio</label><input class="fi" id="fTime" type="time"/></div>
       <div class="fg"><label class="fl">Duración (min)</label><input class="fi" id="fDur" type="number" min="0" max="180" value="15"/></div>
     </div>
-    <div class="fg"><label class="fl">Puntos ⭐ al completar</label><input class="fi" id="fPts" type="number" min="1" max="30" value="5"/></div>
+    <div class="fg"><label class="fl">Puntos ⭐ al completar (0 = sin estrellas)</label><input class="fi" id="fPts" type="number" min="0" max="30" value="5"/></div>
     <div class="fg"><label class="fl">Días de la semana</label><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px" id="dayCbs"></div></div>
     <div class="alarm-box">
       <div class="alarm-ttl">🔔 Alarmas</div>
@@ -187,6 +209,58 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);displa
     <div style="display:flex;gap:7px;margin-top:13px">
       <button class="btn bblk" style="flex:1;justify-content:center" onclick="closeModal('modRew')">Cancelar</button>
       <button class="btn bp"   style="flex:2;justify-content:center" onclick="saveReward()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: ALARM SETTINGS -->
+<div class="ov" id="modAlarm">
+  <div class="mod">
+    <div class="mhdl"></div>
+    <div class="mtit">🔔 Configurar Alarmas</div>
+
+    <div class="fg">
+      <label class="fl">Volumen de alarmas</label>
+      <div class="vol-row">
+        <span class="vol-label">🔇 Bajo</span>
+        <input type="range" class="vol-slider" id="volSlider" min="0.1" max="1" step="0.1" value="0.5" oninput="previewVol(this.value)"/>
+        <span class="vol-label" style="text-align:right">🔊 Alto</span>
+      </div>
+      <div style="text-align:center;font-size:12px;color:var(--tx2);margin-top:4px">Volumen: <span id="volPct">50</span>%</div>
+    </div>
+
+    <div class="fg">
+      <label class="fl">Tipo de tono</label>
+      <div class="tone-grid" id="toneGrid"></div>
+    </div>
+
+    <div class="fg">
+      <label class="fl">Vista previa</label>
+      <div style="display:flex;gap:8px">
+        <button class="btn bp bsm" style="flex:1;justify-content:center" onclick="testAlarm('s')">▶ Probar inicio</button>
+        <button class="btn ba bsm" style="flex:1;justify-content:center" onclick="testAlarm('e')">▶ Probar fin</button>
+      </div>
+    </div>
+
+    <div style="margin-top:6px">
+      <button class="btn bp" style="width:100%;justify-content:center" onclick="saveAlarmSettings()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: BONUS EDITOR -->
+<div class="ov" id="modBonus">
+  <div class="mod">
+    <div class="mhdl"></div>
+    <div class="mtit">⚡ Editar Bonos de Tiempo</div>
+    <p style="font-size:12px;color:var(--tx2);margin-bottom:12px">Configura cuántos minutos hay que ahorrar y cuántas estrellas bonus dan. Pulsa "Aplicar" para sumar los bonus ganados a tus estrellas.</p>
+    <div id="bonusRows"></div>
+    <div style="display:flex;gap:7px;margin-top:12px">
+      <button class="btn bblk" style="flex:1;justify-content:center" onclick="closeModal('modBonus')">Cancelar</button>
+      <button class="btn bp"   style="flex:2;justify-content:center" onclick="saveBonuses()">💾 Guardar bonos</button>
+    </div>
+    <div style="margin-top:8px">
+      <button class="btn bg-" style="width:100%;justify-content:center" onclick="applyBonuses()">✅ Aplicar bonos ganados a ⭐</button>
     </div>
   </div>
 </div>
@@ -229,42 +303,80 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);displa
 
 <script>
 'use strict';
+// ═══════════════════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════════════════
 const EMOJIS=['🌅','🦷','🧴','👕','🥣','🎒','🚌','📚','🎨','🎮','🍎','🛁','📖','💤','🌙','🏃','🎵','🍽️','✏️','🧩','⚽','🐶','🌸','🎀','💃','🌈','🦋','🧁','🎂','🎯','🧸','🌟','💎','🎁','🪐'];
 const REMOJIS=['🍕','🎬','🎮','🍦','🧁','🎀','🌸','🎯','⭐','💎','🦄','🎪','🍭','🌺','🎠'];
 const LONG=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 const SHORT=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 const MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-const KEY='agendaMagicaV5';
+const KEY='agendaMagicaV6';
 
-// ── STATE ──────────────────────────────────────────────────
+// Alarm tone definitions
+const TONES = {
+  melodia:   {name:'🎵 Melodía',    desc:'Ascendente suave'},
+  campana:   {name:'🔔 Campana',    desc:'Tono de campana'},
+  alegre:    {name:'🎉 Alegre',     desc:'Notas saltarinas'},
+  suave:     {name:'🌸 Suave',      desc:'Ding suave'},
+  urgente:   {name:'⚡ Urgente',    desc:'Rápido y claro'},
+  magica:    {name:'✨ Mágica',     desc:'Arpegio brillante'},
+};
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
 function todayStr(){const d=new Date();return`${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;}
 function todayDow(){return new Date().getDay();}
 
+function defBonuses(){return[
+  {id:'b1',em:'⚡',lbl:'Tiempo rápido', mins:5,  stars:2},
+  {id:'b2',em:'🌟',lbl:'Buen ritmo',    mins:10, stars:3},
+  {id:'b3',em:'🏆',lbl:'Súper rápida',  mins:30, stars:5},
+];}
+
 function defActs(){return[
-  {id:1,emoji:'🌅',name:'Despertar y estirar',time:'07:00',dur:10,pts:3,as:false,ae:false,days:[0,1,2,3,4,5,6]},
-  {id:2,emoji:'🦷',name:'Lavarse los dientes',time:'07:10',dur:10,pts:3,as:true,ae:false,days:[0,1,2,3,4,5,6]},
-  {id:3,emoji:'👕',name:'Vestirse',time:'07:20',dur:10,pts:5,as:false,ae:false,days:[1,2,3,4,5]},
-  {id:4,emoji:'🥣',name:'Desayuno',time:'07:30',dur:20,pts:5,as:true,ae:true,days:[0,1,2,3,4,5,6]},
-  {id:5,emoji:'🎒',name:'Preparar mochila',time:'07:50',dur:10,pts:5,as:false,ae:false,days:[1,2,3,4,5]},
-  {id:6,emoji:'📚',name:'Tarea',time:'15:00',dur:45,pts:10,as:true,ae:true,days:[1,2,3,4,5]},
-  {id:7,emoji:'🎨',name:'Tiempo de juego',time:'16:00',dur:30,pts:5,as:false,ae:true,days:[0,1,2,3,4,5,6]},
-  {id:8,emoji:'🍽️',name:'Cena',time:'19:30',dur:20,pts:5,as:true,ae:false,days:[0,1,2,3,4,5,6]},
-  {id:9,emoji:'🛁',name:'Baño',time:'20:00',dur:15,pts:5,as:false,ae:false,days:[0,1,2,3,4,5,6]},
-  {id:10,emoji:'📖',name:'Lectura',time:'20:30',dur:15,pts:7,as:false,ae:true,days:[0,1,2,3,4,5,6]},
-  {id:11,emoji:'💤',name:'¡A dormir!',time:'21:00',dur:0,pts:10,as:true,ae:false,days:[0,1,2,3,4,5,6]},
+  {id:1,emoji:'🌅',name:'Despertar y estirar',   time:'07:00',dur:10,pts:3, as:false,ae:false,days:[0,1,2,3,4,5,6]},
+  {id:2,emoji:'🦷',name:'Lavarse los dientes',    time:'07:10',dur:10,pts:3, as:true, ae:false,days:[0,1,2,3,4,5,6]},
+  {id:3,emoji:'👕',name:'Vestirse',               time:'07:20',dur:10,pts:5, as:false,ae:false,days:[1,2,3,4,5]},
+  {id:4,emoji:'🥣',name:'Desayuno',               time:'07:30',dur:20,pts:5, as:true, ae:true, days:[0,1,2,3,4,5,6]},
+  {id:5,emoji:'🎒',name:'Preparar mochila',       time:'07:50',dur:10,pts:5, as:false,ae:false,days:[1,2,3,4,5]},
+  {id:6,emoji:'📚',name:'Tarea',                  time:'15:00',dur:45,pts:10,as:true, ae:true, days:[1,2,3,4,5]},
+  {id:7,emoji:'🎨',name:'Tiempo de juego',        time:'16:00',dur:30,pts:5, as:false,ae:true, days:[0,1,2,3,4,5,6]},
+  {id:8,emoji:'🍽️',name:'Cena',                  time:'19:30',dur:20,pts:5, as:true, ae:false,days:[0,1,2,3,4,5,6]},
+  {id:9,emoji:'🛁',name:'Baño',                   time:'20:00',dur:15,pts:5, as:false,ae:false,days:[0,1,2,3,4,5,6]},
+  {id:10,emoji:'📖',name:'Lectura',               time:'20:30',dur:15,pts:7, as:false,ae:true, days:[0,1,2,3,4,5,6]},
+  {id:11,emoji:'💤',name:'¡A dormir!',            time:'21:00',dur:0, pts:10,as:true, ae:false,days:[0,1,2,3,4,5,6]},
 ];}
 
 function defState(){return{
   acts:defActs(),
-  rewards:[{id:1,emoji:'🍦',name:'Un helado',cost:15},{id:2,emoji:'🎬',name:'Ver una película',cost:30},{id:3,emoji:'🎮',name:'30 min extra de juego',cost:12},{id:4,emoji:'🧁',name:'Hornear juntas',cost:35}],
-  stars:0,savedSecs:0,lastReset:todayStr(),nextActId:20,nextRewId:10,pin:'1234',status:{},
+  rewards:[
+    {id:1,emoji:'🍦',name:'Un helado',cost:15},
+    {id:2,emoji:'🎬',name:'Ver una película',cost:30},
+    {id:3,emoji:'🎮',name:'30 min extra de juego',cost:12},
+    {id:4,emoji:'🧁',name:'Hornear juntas',cost:35},
+  ],
+  bonuses: defBonuses(),
+  bonusApplied: false,   // whether today's bonuses were already applied
+  stars:0, savedSecs:0, lastReset:todayStr(),
+  nextActId:20, nextRewId:10, pin:'1234', status:{},
+  alarm:{ volume:0.5, tone:'melodia' },
 };}
 
 let S=loadState();
 function loadState(){
   try{
     const r=localStorage.getItem(KEY);
-    if(r){const s=JSON.parse(r);if(!s.pin)s.pin='1234';if(!s.status)s.status={};if(s.lastReset!==todayStr()){s.savedSecs=0;s.lastReset=todayStr();}return s;}
+    if(r){
+      const s=JSON.parse(r);
+      if(!s.pin)s.pin='1234';
+      if(!s.status)s.status={};
+      if(!s.alarm)s.alarm={volume:0.5,tone:'melodia'};
+      if(!s.bonuses)s.bonuses=defBonuses();
+      if(s.lastReset!==todayStr()){s.savedSecs=0;s.lastReset=todayStr();s.bonusApplied=false;}
+      return s;
+    }
   }catch(e){}
   return defState();
 }
@@ -274,7 +386,9 @@ function stKey(id){return`${todayStr()}:${id}`;}
 function getStatus(id){return S.status[stKey(id)]||'pending';}
 function setStatus(id,v){S.status[stKey(id)]=v;}
 
-// ── TIMER ──────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// TIMER ENGINE
+// ═══════════════════════════════════════════════════════════
 let curId=null,secsLeft=0,totalSecs=0,running=false,tiv=null;
 const autoStarted=new Set(),alarmFired=new Set();
 
@@ -330,27 +444,28 @@ function checkAutoStart(){
   }
 }
 
-// ── COMPLETE / SKIP ────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// COMPLETE / SKIP
+// ═══════════════════════════════════════════════════════════
 function completeAct(id){
   const now=new Date(),nm=now.getHours()*60+now.getMinutes();
   const a=S.acts.find(x=>x.id===id);if(!a)return;
   if(a.dur>0&&nm>=t2m(a.time)+a.dur){alert('⛔ El tiempo ya pasó.\nEsta actividad no se puede marcar como lista.');return;}
-  S.stars+=(a.pts||0);
+  if(a.pts>0)S.stars+=(a.pts||0);
   if(secsLeft>0&&curId===id)S.savedSecs+=secsLeft;
-  setStatus(id,'done');pauseTmr();persist();burst();
+  setStatus(id,'done');pauseTmr();persist();
+  if(a.pts>0)burst();
   const nx=getNext(id);
   if(nx){curId=nx.id;initTimer(nx);}else curId=null;
   renderAll();
+  updateNotification(a);
 }
-
 function skipAct(id){
-  // No stars, no saved time
   setStatus(id,'missed');pauseTmr();persist();
   const nx=getNext(id);
   if(nx){curId=nx.id;initTimer(nx);}else curId=null;
   renderAll();
 }
-
 function toggleTimer(){
   const a=S.acts.find(x=>x.id===curId)||getActive();if(!a||!a.dur)return;
   if(running){pauseTmr();}
@@ -362,21 +477,142 @@ function toggleTimer(){
   renderHome();
 }
 
-// ── AUDIO ──────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// AUDIO — multiple tones with volume
+// ═══════════════════════════════════════════════════════════
 let actx=null;
 function gAudio(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();return actx;}
-function tone(c,f,d,l){const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=f;const t=c.currentTime;g.gain.setValueAtTime(0,t+d);g.gain.linearRampToValueAtTime(.27,t+d+.05);g.gain.exponentialRampToValueAtTime(.001,t+d+l);o.start(t+d);o.stop(t+d+l+.1);}
-function playAlarm(type){try{const c=gAudio();if(type==='s'){tone(c,523,0,.15);tone(c,659,.18,.15);tone(c,784,.36,.2);tone(c,1047,.56,.3);}else{tone(c,784,0,.2);tone(c,659,.25,.2);tone(c,523,.5,.35);}}catch(e){}}
+
+function tone(c,freq,delay,dur,vol,wave='sine'){
+  const o=c.createOscillator(),g=c.createGain();
+  o.connect(g);g.connect(c.destination);
+  o.type=wave;o.frequency.value=freq;
+  const t=c.currentTime;
+  g.gain.setValueAtTime(0,t+delay);
+  g.gain.linearRampToValueAtTime(vol,t+delay+.05);
+  g.gain.exponentialRampToValueAtTime(.001,t+delay+dur);
+  o.start(t+delay);o.stop(t+delay+dur+.1);
+}
+
+function playTone(type, toneId, vol){
+  const v=vol||S.alarm.volume||0.5;
+  const t=toneId||S.alarm.tone||'melodia';
+  const c=gAudio();
+  const isStart=(type==='s');
+  switch(t){
+    case 'melodia':
+      if(isStart){tone(c,523,0,.15,v);tone(c,659,.18,.15,v);tone(c,784,.36,.2,v);tone(c,1047,.56,.3,v);}
+      else{tone(c,784,0,.2,v);tone(c,659,.25,.2,v);tone(c,523,.5,.35,v);}
+      break;
+    case 'campana':
+      if(isStart){tone(c,880,0,.05,v,'triangle');tone(c,1100,.15,.4,v,'triangle');tone(c,1320,.35,.5,v,'triangle');}
+      else{tone(c,1320,0,.05,v,'triangle');tone(c,880,.2,.5,v,'triangle');}
+      break;
+    case 'alegre':
+      if(isStart){[523,659,784,1047,1319].forEach((f,i)=>tone(c,f,i*.12,.2,v));}
+      else{[1047,784,659,523].forEach((f,i)=>tone(c,f,i*.15,.25,v));}
+      break;
+    case 'suave':
+      if(isStart){tone(c,528,0,.5,v*0.7,'sine');tone(c,660,.3,.5,v*0.7,'sine');}
+      else{tone(c,660,0,.4,v*0.7,'sine');tone(c,528,.35,.6,v*0.7,'sine');}
+      break;
+    case 'urgente':
+      if(isStart){[0,.1,.2,.3,.4].forEach(d=>tone(c,880,d,.08,v,'square'));}
+      else{[0,.15,.3].forEach(d=>tone(c,440,d,.1,v,'square'));}
+      break;
+    case 'magica':
+      if(isStart){[392,494,587,698,784,988].forEach((f,i)=>tone(c,f,i*.09,.18,v));}
+      else{[988,784,698,587,494,392].forEach((f,i)=>tone(c,f,i*.09,.2,v));}
+      break;
+    default:
+      if(isStart){tone(c,523,0,.15,v);tone(c,784,.25,.25,v);}
+      else{tone(c,784,0,.2,v);tone(c,523,.3,.3,v);}
+  }
+}
+
+function playAlarm(type){try{playTone(type);}catch(e){}}
+function testAlarm(type){try{gAudio();const vol=parseFloat(document.getElementById('volSlider').value)||S.alarm.volume;const t=S.alarm.tone;playTone(type,t,vol);}catch(e){}}
+function previewVol(v){document.getElementById('volPct').textContent=Math.round(v*100);}
+
 ['touchstart','click'].forEach(ev=>document.addEventListener(ev,()=>{try{gAudio();}catch(e){}},{once:true}));
 
-// ── FORMAT ─────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// NOTIFICATIONS (for lock screen)
+// ═══════════════════════════════════════════════════════════
+let notifPermission=false;
+
+async function requestNotifPermission(){
+  if(!('Notification' in window))return;
+  const p=await Notification.requestPermission();
+  notifPermission=(p==='granted');
+  persist();
+}
+
+function updateNotification(completedAct){
+  if(!notifPermission)return;
+  const nx=getNext(completedAct?completedAct.id:-1);
+  if(!nx)return;
+  try{
+    new Notification('✅ '+completedAct.name+' lista!',{
+      body:'Siguiente: '+nx.emoji+' '+nx.name+' a las '+nx.time,
+      icon:'./icon-192.png',
+      badge:'./icon-192.png',
+      tag:'agenda-next',
+      renotify:true,
+      silent:false,
+    });
+  }catch(e){}
+}
+
+function scheduleNextNotif(){
+  if(!notifPermission)return;
+  const acts=actsForDow(todayDow());
+  const now=new Date(),nm=now.getHours()*60+now.getMinutes();
+  const nx=acts.find(a=>getStatus(a.id)==='pending'&&t2m(a.time)>nm);
+  if(!nx)return;
+  const msUntil=(t2m(nx.time)-nm)*60*1000;
+  setTimeout(()=>{
+    try{
+      new Notification('⏰ '+nx.emoji+' '+nx.name,{
+        body:'¡Es hora de '+nx.name+'!',
+        icon:'./icon-192.png',
+        badge:'./icon-192.png',
+        tag:'agenda-alarm',
+        renotify:true,
+      });
+    }catch(e){}
+    scheduleNextNotif();
+  },Math.min(msUntil,2147483647));
+}
+
+// Keep screen/lock screen visible via Wake Lock
+let wakeLock=null;
+async function requestWakeLock(){
+  try{
+    if('wakeLock' in navigator){
+      wakeLock=await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release',()=>wakeLock=null);
+    }
+  }catch(e){}
+}
+document.addEventListener('visibilitychange',async()=>{
+  if(document.visibilityState==='visible'&&!wakeLock)await requestWakeLock();
+});
+
+// ═══════════════════════════════════════════════════════════
+// FORMAT
+// ═══════════════════════════════════════════════════════════
 function fmtSec(s){const m=Math.floor(Math.abs(s)/60),sc=Math.abs(s)%60;return m+':'+String(sc).padStart(2,'0');}
 function fmtDur(s){if(s<60)return s+'s';if(s<3600)return Math.floor(s/60)+'min';return Math.floor(s/3600)+'h '+Math.floor((s%3600)/60)+'min';}
 
-// ── BURST ──────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// BURST
+// ═══════════════════════════════════════════════════════════
 function burst(){for(let i=0;i<6;i++)setTimeout(()=>{const el=document.createElement('div');el.className='sbst';el.textContent=['⭐','🌟','✨','💫','🎉'][Math.floor(Math.random()*5)];el.style.left=(10+Math.random()*80)+'vw';el.style.top=(10+Math.random()*50)+'vh';document.body.appendChild(el);setTimeout(()=>el.remove(),750);},i*100);}
 
-// ── CLOCK ──────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// CLOCK
+// ═══════════════════════════════════════════════════════════
 function updateClock(){
   const now=new Date();
   document.getElementById('barClock').textContent=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0');
@@ -385,14 +621,28 @@ function updateClock(){
   checkAutoStart();
 }
 
-// ── RENDER: HOME ───────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// BONUS CALCULATIONS
+// ═══════════════════════════════════════════════════════════
+function calcEarnedBonuses(){
+  const sv=S.savedSecs/60; // minutes saved
+  return S.bonuses.filter(b=>sv>=b.mins);
+}
+function totalBonusStars(){
+  return calcEarnedBonuses().reduce((s,b)=>s+b.stars,0);
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDER: HOME
+// ═══════════════════════════════════════════════════════════
 function renderHome(){
   const ta=actsForDow(todayDow()),c=document.getElementById('hc');
   if(!ta.length){c.innerHTML=`<div class="card" style="text-align:center;padding:22px"><div style="font-size:42px">📅</div><div style="font-weight:700;margin-top:7px">No hay actividades hoy</div><div style="font-size:12px;color:var(--tx2);margin-top:3px">Ve a ✏️ Editar para agregar</div></div>`;return;}
   const allOver=ta.every(a=>getStatus(a.id)!=='pending');
   if(allOver){
     const done=ta.filter(a=>getStatus(a.id)==='done').length,miss=ta.filter(a=>getStatus(a.id)==='missed').length;
-    c.innerHTML=`<div class="alldone"><div class="ad-em">🎉🌟🦋</div><h2>¡Día terminado!</h2><p>Completaste <b>${done}</b> de ${ta.length}${miss>0?` · <span style="color:var(--r)">⛔ ${miss} perdidas</span>`:''} actividades.</p><div class="sg"><div class="sc"><div class="sn">⭐${S.stars}</div><div class="sl">Estrellas ganadas</div></div><div class="sc"><div class="sn" style="font-size:18px">${fmtDur(S.savedSecs)}</div><div class="sl">Tiempo ahorrado</div></div></div></div>`;
+    const bonusTotal=S.bonusApplied?0:totalBonusStars();
+    c.innerHTML=`<div class="alldone"><div class="ad-em">🎉🌟🦋</div><h2>¡Día terminado!</h2><p>Completaste <b>${done}</b> de ${ta.length}${miss>0?` · <span style="color:var(--r)">⛔ ${miss} perdidas</span>`:''} actividades.</p><div class="sg"><div class="sc"><div class="sn">⭐${S.stars}</div><div class="sl">Estrellas ganadas</div></div><div class="sc"><div class="sn" style="font-size:18px">${fmtDur(S.savedSecs)}</div><div class="sl">Tiempo ahorrado</div></div></div>${bonusTotal>0?`<div class="notif-banner">⚡ Tienes +${bonusTotal} ⭐ de bonus disponibles!<button class="btn bp bsm" onclick="applyBonusesQuick()" style="margin-left:auto">Aplicar</button></div>`:''}  </div>`;
     return;
   }
   const now=new Date(),nm=now.getHours()*60+now.getMinutes();
@@ -410,23 +660,33 @@ function renderHome(){
   const tLabel=act.dur===0?'∞':(expired?'¡Tiempo!':fmtSec(secsLeft));
   const tSub=act.dur===0?'sin límite':(expired?'Expirada':(running?'restantes':'presiona ▶'));
   const nx=getNext(act.id);
+  const noStars=act.pts===0;
 
   let html=`<div class="hero">
     <div class="h-lbl">🔥 Actividad actual</div>
     <div class="h-emo">${act.emoji}</div>
     <div class="h-name">${act.name}</div>
-    <div class="h-meta">⏰ ${act.time}${act.dur>0?' · '+act.dur+' min':''} · ⭐${act.pts}</div>
+    <div class="h-meta">⏰ ${act.time}${act.dur>0?' · '+act.dur+' min':''} · ${noStars?'sin ⭐':'⭐'+act.pts}</div>
     ${act.dur>0?`<div class="rw"><svg class="rsvg" width="110" height="110" viewBox="0 0 110 110"><circle class="rb" cx="55" cy="55" r="${R}"/><circle class="${rCls}" cx="55" cy="55" r="${R}" stroke-dasharray="${C}" stroke-dashoffset="${C-C*pct}"/></svg><div class="ri-c"><div class="rt">${tLabel}</div><div class="rs">${tSub}</div></div></div>`:''}
-    ${expired?`<div class="hbadge hb-red">⛔ Tiempo expirado · sin estrellas</div>`:S.savedSecs>0?`<div class="hbadge hb-green">⚡ +${fmtDur(S.savedSecs)} ahorrados hoy</div>`:''}
+    ${expired?`<div class="hbadge hb-red">⛔ Tiempo expirado · sin estrellas</div>`:noStars?`<div class="hbadge hb-amber">🎯 Actividad sin estrellas</div>`:S.savedSecs>0?`<div class="hbadge hb-green">⚡ +${fmtDur(S.savedSecs)} ahorrados hoy</div>`:''}
     <div class="ctrl">
       ${act.dur>0&&!expired?`<button class="btn ${running?'ba':'bw'}" onclick="toggleTimer()">${running?'⏸ Pausar':'▶ Iniciar'}</button>`:''}
-      <button class="btn bg-" ${expired?'disabled':''} onclick="${expired?'':' completeAct('+act.id+')'}">✅ Lista</button>
+      <button class="btn bg-" ${expired?'disabled':''} onclick="${expired?'':'completeAct('+act.id+')'}">✅ Lista</button>
       ${nx&&!expired?`<button class="btn bgh bsm" onclick="skipAct(${act.id})">Saltar ›</button>`:''}
     </div>
   </div>`;
 
-  if(nx&&!expired)html+=`<div class="nextup"><div class="nu-em">${nx.emoji}</div><div class="nu-info"><div class="nu-lbl">Después viene...</div><div class="nu-nm">${nx.name}</div><div class="nu-t">⏰ ${nx.time}${nx.dur>0?' · '+nx.dur+' min':''} · ⭐${nx.pts}</div></div></div>`;
-  if(S.savedSecs>=60){const lb=S.savedSecs>=1800?'🏆 ¡Súper rápida!':S.savedSecs>=600?'🌟 ¡Muy bien!':'⚡ ¡Buen ritmo!';html+=`<div class="saved"><div class="sv-em">⏱️</div><div class="sv-tx">${lb} · ${fmtDur(S.savedSecs)} ahorrados</div></div>`;}
+  if(nx&&!expired)html+=`<div class="nextup"><div class="nu-em">${nx.emoji}</div><div class="nu-info"><div class="nu-lbl">Después viene...</div><div class="nu-nm">${nx.name}</div><div class="nu-t">⏰ ${nx.time}${nx.dur>0?' · '+nx.dur+' min':''} · ${nx.pts>0?'⭐'+nx.pts:'sin ⭐'}</div></div></div>`;
+  if(S.savedSecs>=60){
+    const lb=S.savedSecs>=1800?'🏆 ¡Súper rápida!':S.savedSecs>=600?'🌟 ¡Muy bien!':'⚡ ¡Buen ritmo!';
+    html+=`<div class="saved"><div class="sv-em">⏱️</div><div class="sv-tx">${lb} · ${fmtDur(S.savedSecs)} ahorrados</div></div>`;
+  }
+
+  // Notification prompt
+  if(!notifPermission&&'Notification' in window&&Notification.permission!=='denied'){
+    html+=`<div class="notif-banner">🔔 Activa notificaciones para ver la agenda desde la pantalla de bloqueo<button class="btn bp bsm" onclick="activateNotifs()" style="margin-left:auto;flex-shrink:0">Activar</button></div>`;
+  }
+
   html+=progCard(ta);
   c.innerHTML=html;
 }
@@ -436,7 +696,20 @@ function progCard(acts){
   return`<div class="card" style="padding:10px 12px"><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:11px;font-weight:700">Progreso de hoy</span><span style="font-size:11px;color:var(--p);font-weight:700">${done}/${tot}${miss>0?' · <span style="color:var(--r)">⛔'+miss+'</span>':''}</span></div><div class="pbar"><div class="pfill" style="width:${tot>0?Math.round(done/tot*100):0}%"></div></div></div>`;
 }
 
-// ── RENDER: LIST ───────────────────────────────────────────
+async function activateNotifs(){
+  await requestNotifPermission();
+  if(notifPermission){scheduleNextNotif();requestWakeLock();}
+  renderHome();
+}
+function applyBonusesQuick(){
+  if(S.bonusApplied)return;
+  const b=totalBonusStars();
+  if(b>0){S.stars+=b;S.bonusApplied=true;persist();burst();renderAll();}
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDER: LIST
+// ═══════════════════════════════════════════════════════════
 let listDow=todayDow();
 function renderList(){
   const now=new Date(),nm=now.getHours()*60+now.getMinutes(),tod=todayDow();
@@ -451,38 +724,71 @@ function renderList(){
     else if(st==='missed'){cls+=' done-miss';badge=`<span class="bdg bdg-r">⛔ Perdida</span>`;}
     else if(isCur){cls+=' now';badge=`<span class="bdg bdg-p">▶ Ahora</span>`;}
     else if(isSoon)badge=`<span class="bdg bdg-a">⏰ Pronto</span>`;
-    html+=`<div class="${cls}"><div class="ae">${a.emoji}</div><div class="ai-info"><div class="an">${a.name}</div><div class="am">⏰ ${a.time}${a.dur>0?' · '+a.dur+' min':''}  · ⭐${a.pts}${a.as||a.ae?' 🔔':''}</div></div>${badge}</div>`;
+    html+=`<div class="${cls}"><div class="ae">${a.emoji}</div><div class="ai-info"><div class="an">${a.name}</div><div class="am">⏰ ${a.time}${a.dur>0?' · '+a.dur+' min':''}  · ${a.pts>0?'⭐'+a.pts:'sin ⭐'}${a.as||a.ae?' 🔔':''}</div></div>${badge}</div>`;
   });
   document.getElementById('lc').innerHTML=html;
 }
 
-// ── RENDER: EDIT ───────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// RENDER: EDIT
+// ═══════════════════════════════════════════════════════════
 let editDow=todayDow();
 function renderEdit(){
   document.getElementById('editDayTabs').innerHTML=buildTabs(editDow,(d)=>{editDow=d;renderEdit();});
   const acts=actsForDow(editDow);
   let html='';
   if(!acts.length)html=`<div class="card" style="text-align:center;padding:13px;font-size:12px;color:var(--tx2)">Sin actividades para ${LONG[editDow]}</div>`;
-  acts.forEach(a=>{html+=`<div class="ai"><div class="ae">${a.emoji}</div><div class="ai-info"><div class="an">${a.name}</div><div class="am">⏰ ${a.time}${a.dur>0?' · '+a.dur+' min':''}  · ⭐${a.pts}</div></div><button class="btn bsm" style="background:var(--pl);color:var(--p);margin-right:3px" onclick="openEditAct(${a.id})">✏️</button><button class="btn bsm" style="background:var(--rl);color:var(--r)" onclick="deleteAct(${a.id})">🗑</button></div>`;});
+  acts.forEach(a=>{html+=`<div class="ai"><div class="ae">${a.emoji}</div><div class="ai-info"><div class="an">${a.name}</div><div class="am">⏰ ${a.time}${a.dur>0?' · '+a.dur+' min':''}  · ${a.pts>0?'⭐'+a.pts:'sin ⭐'}</div></div><button class="btn bsm" style="background:var(--pl);color:var(--p);margin-right:3px" onclick="openEditAct(${a.id})">✏️</button><button class="btn bsm" style="background:var(--rl);color:var(--r)" onclick="deleteAct(${a.id})">🗑</button></div>`;});
   document.getElementById('ec').innerHTML=html;
 }
 
-// ── RENDER: REWARDS ────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// RENDER: REWARDS
+// ═══════════════════════════════════════════════════════════
 function renderRewards(){
-  const sv=S.savedSecs;
-  let bonus=0;if(sv>=300)bonus+=2;if(sv>=600)bonus+=3;if(sv>=1800)bonus+=5;
-  const total=S.stars+bonus;
-  let html=`<div class="card" style="text-align:center;padding:15px 12px"><div style="font-family:'Fredoka One',cursive;font-size:52px;color:var(--a);line-height:1">⭐${S.stars}</div><div style="font-size:12px;color:var(--tx2);margin-top:3px">estrellas acumuladas</div>${bonus>0?`<div style="margin-top:4px;font-size:11px;color:var(--g);font-weight:700">+${bonus} ⭐ bonus por tiempo ahorrado</div>`:''}</div>`;
-  html+=`<div class="sh">✂️ Gestionar estrellas</div><div class="star-row"><label>Quitar estrellas sin canjear premio:</label><input class="star-in" id="starIn" type="number" min="1" max="${Math.max(1,S.stars)}" value="1"/><button class="btn br- bsm" onclick="removeStars()">Quitar ⭐</button></div>`;
-  html+=`<div class="sh">⏱️ Rangos de tiempo ahorrado</div>`;
-  [{s:300,lbl:'5 min ahorrados',em:'⚡',b:2},{s:600,lbl:'10 min ahorrados',em:'🌟',b:3},{s:1800,lbl:'30 min ahorrados',em:'🏆',b:5}].forEach(t=>{
-    const p=Math.min(100,Math.round(sv/t.s*100)),ok=sv>=t.s;
-    html+=`<div class="ri" style="${ok?'border-color:var(--g);background:var(--gl)':''}"><div class="re">${t.em}</div><div class="ri-inf"><div class="rn">${t.lbl}</div><div class="rc-">+${t.b} ⭐ bonus ${ok?'✅':''}</div><div class="rp"><div class="rpf" style="width:${p}%;background:var(--g)"></div></div></div></div>`;
+  const sv=S.savedSecs/60;
+  const earned=calcEarnedBonuses();
+  const bonusTotal=S.bonusApplied?0:totalBonusStars();
+  const total=S.stars+bonusTotal;
+
+  let html=`<div class="card" style="text-align:center;padding:15px 12px">
+    <div style="font-family:'Fredoka One',cursive;font-size:52px;color:var(--a);line-height:1">⭐${S.stars}</div>
+    <div style="font-size:12px;color:var(--tx2);margin-top:3px">estrellas acumuladas</div>
+    ${bonusTotal>0?`<div style="margin-top:4px;font-size:11px;color:var(--g);font-weight:700">+${bonusTotal} ⭐ de bonos disponibles (total: ${total})</div>`:''}
+  </div>`;
+
+  // Star manager
+  html+=`<div class="sh">✂️ Gestionar estrellas</div>
+  <div class="star-row"><label>Quitar estrellas sin canjear premio:</label><input class="star-in" id="starIn" type="number" min="1" max="${Math.max(1,S.stars)}" value="1"/><button class="btn br- bsm" onclick="removeStars()">Quitar ⭐</button></div>`;
+
+  // Bonuses
+  html+=`<div class="sh" style="justify-content:space-between">
+    <span>⚡ Bonos por tiempo ahorrado</span>
+    <button class="btn bblk bsm" onclick="openBonusEditor()" style="font-size:10px">✏️ Editar</button>
+  </div>`;
+  S.bonuses.forEach(b=>{
+    const svMins=S.savedSecs/60;
+    const p=Math.min(100,Math.round(svMins/b.mins*100));
+    const ok=svMins>=b.mins;
+    const applied=S.bonusApplied&&ok;
+    html+=`<div class="ri" style="${ok?'border-color:var(--g);background:var(--gl)':''}">
+      <div class="re">${b.em}</div>
+      <div class="ri-inf">
+        <div class="rn">${b.lbl} — ${b.mins} min ahorrados</div>
+        <div class="rc-">+${b.stars} ⭐ bonus ${ok?(applied?'✅ Aplicado':'🎁 Ganado!'):''}${!ok?`· faltan ${Math.ceil(b.mins-svMins)} min`:''}</div>
+        <div class="rp"><div class="rpf" style="width:${p}%;background:var(--g)"></div></div>
+      </div>
+    </div>`;
   });
+  if(bonusTotal>0){
+    html+=`<button class="btn bg-" style="width:100%;justify-content:center;margin-bottom:8px" onclick="applyBonusesQuick()">✅ Aplicar ${bonusTotal} ⭐ de bonos a mis estrellas</button>`;
+  }
+
+  // Prizes
   html+=`<div class="sh">🎁 Premios</div>`;
   S.rewards.forEach(r=>{
     const can=total>=r.cost,p=Math.min(100,Math.round(total/r.cost*100));
-    html+=`<div class="ri"><div class="re">${r.emoji}</div><div class="ri-inf"><div class="rn">${r.name}</div><div class="rc-">⭐ ${r.cost}</div><div class="rp"><div class="rpf" style="width:${p}%"></div></div></div><div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end"><button class="bcl" ${can?'':'disabled'} onclick="claimReward(${r.id},${r.cost},${bonus})">${can?'🎉 Canjear':'🔒'}</button><button style="background:none;border:none;cursor:pointer;font-size:14px;color:var(--r)" onclick="deleteReward(${r.id})">🗑</button></div></div>`;
+    html+=`<div class="ri"><div class="re">${r.emoji}</div><div class="ri-inf"><div class="rn">${r.name}</div><div class="rc-">⭐ ${r.cost}</div><div class="rp"><div class="rpf" style="width:${p}%"></div></div></div><div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end"><button class="bcl" ${can?'':'disabled'} onclick="claimReward(${r.id},${r.cost},${bonusTotal})">${can?'🎉 Canjear':'🔒'}</button><button style="background:none;border:none;cursor:pointer;font-size:14px;color:var(--r)" onclick="deleteReward(${r.id})">🗑</button></div></div>`;
   });
   html+=`<button class="btn bp" style="width:100%;justify-content:center;margin-top:6px" onclick="openModRew()">➕ Nuevo premio</button>`;
   document.getElementById('rc').innerHTML=html;
@@ -496,11 +802,83 @@ function removeStars(){
 }
 function claimReward(id,cost,bonus){
   const total=S.stars+bonus;if(total<cost)return;
-  S.stars=Math.max(0,S.stars-Math.max(0,cost-bonus));persist();burst();renderRewards();
+  const fromBonus=Math.min(bonus,cost);
+  const fromStars=cost-fromBonus;
+  if(fromBonus>0&&!S.bonusApplied){S.bonusApplied=true;}
+  S.stars=Math.max(0,S.stars-fromStars);
+  persist();burst();renderRewards();
 }
 function deleteReward(id){S.rewards=S.rewards.filter(r=>r.id!==id);persist();renderRewards();}
 
-// ── DAY TABS ───────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// BONUS EDITOR
+// ═══════════════════════════════════════════════════════════
+function openBonusEditor(){
+  let html='';
+  S.bonuses.forEach((b,i)=>{
+    html+=`<div class="bonus-row">
+      <div class="bonus-em">${b.em}</div>
+      <div class="bonus-info"><div class="bonus-lbl">${b.lbl}</div></div>
+      <div class="bonus-inputs">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+          <span style="font-size:9px;color:var(--tx2)">Min</span>
+          <input class="bonus-in" type="number" min="1" max="120" value="${b.mins}" id="bm${i}"/>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+          <span style="font-size:9px;color:var(--tx2)">⭐</span>
+          <input class="bonus-in" type="number" min="0" max="50" value="${b.stars}" id="bs${i}"/>
+        </div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('bonusRows').innerHTML=html;
+  openModal('modBonus');
+}
+function saveBonuses(){
+  S.bonuses.forEach((b,i)=>{
+    const m=parseInt(document.getElementById('bm'+i).value)||b.mins;
+    const st=parseInt(document.getElementById('bs'+i).value)||0;
+    b.mins=Math.max(1,m);b.stars=Math.max(0,st);
+  });
+  persist();closeModal('modBonus');renderRewards();
+}
+function applyBonuses(){
+  if(S.bonusApplied){alert('Los bonos de hoy ya fueron aplicados.');closeModal('modBonus');return;}
+  const b=totalBonusStars();
+  if(b===0){alert('Aún no has ganado ningún bono hoy.');return;}
+  S.stars+=b;S.bonusApplied=true;persist();burst();closeModal('modBonus');renderAll();
+}
+
+// ═══════════════════════════════════════════════════════════
+// ALARM SETTINGS MODAL
+// ═══════════════════════════════════════════════════════════
+function openAlarmSettings(){
+  document.getElementById('volSlider').value=S.alarm.volume;
+  document.getElementById('volPct').textContent=Math.round(S.alarm.volume*100);
+  // Build tone grid
+  const g=document.getElementById('toneGrid');
+  g.innerHTML='';
+  Object.entries(TONES).forEach(([key,t])=>{
+    const b=document.createElement('button');
+    b.className='tone-btn'+(key===S.alarm.tone?' sel':'');
+    b.innerHTML=`<div>${t.name}</div><div style="font-size:10px;color:var(--tx2);margin-top:2px">${t.desc}</div>`;
+    b.onclick=()=>{
+      S.alarm.tone=key;
+      document.querySelectorAll('.tone-btn').forEach(x=>x.classList.remove('sel'));
+      b.classList.add('sel');
+    };
+    g.appendChild(b);
+  });
+  openModal('modAlarm');
+}
+function saveAlarmSettings(){
+  S.alarm.volume=parseFloat(document.getElementById('volSlider').value)||0.5;
+  persist();closeModal('modAlarm');
+}
+
+// ═══════════════════════════════════════════════════════════
+// DAY TABS
+// ═══════════════════════════════════════════════════════════
 function buildTabs(active,onClick){
   const tod=todayDow();
   let h='<div class="dtabs">';
@@ -511,7 +889,9 @@ function buildTabs(active,onClick){
   return h+'</div>';
 }
 
-// ── MODAL: ACTIVITY ────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// MODAL: ACTIVITY
+// ═══════════════════════════════════════════════════════════
 let editActId=null,selEmoji='🌟',selREmoji='⭐';
 
 function buildEG(cid,list,sel,cb){
@@ -546,7 +926,7 @@ function openEditAct(id){
 }
 function saveAct(){
   const name=document.getElementById('fName').value.trim(),time=document.getElementById('fTime').value;
-  const dur=parseInt(document.getElementById('fDur').value)||0,pts=parseInt(document.getElementById('fPts').value)||5;
+  const dur=parseInt(document.getElementById('fDur').value)||0,pts=parseInt(document.getElementById('fPts').value)||0;
   const as_=document.getElementById('togAS').classList.contains('on'),ae_=document.getElementById('togAE').classList.contains('on');
   const days=getCheckedDays();
   if(!name||!time){alert('Escribe el nombre y la hora.');return;}if(!days.length){alert('Selecciona al menos un día.');return;}
@@ -560,7 +940,9 @@ function deleteAct(id){
   persist();renderAll();
 }
 
-// ── MODAL: REWARD ──────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// MODAL: REWARD
+// ═══════════════════════════════════════════════════════════
 function openModRew(){
   selREmoji='⭐';document.getElementById('rName').value='';document.getElementById('rCost').value=20;
   buildEG('rewEmojiGrid',REMOJIS,selREmoji,e=>selREmoji=e);openModal('modRew');
@@ -571,7 +953,9 @@ function saveReward(){
   S.rewards.push({id:S.nextRewId++,emoji:selREmoji,name,cost});persist();closeModal('modRew');renderRewards();
 }
 
-// ── PIN SYSTEM ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// PIN SYSTEM
+// ═══════════════════════════════════════════════════════════
 let pinBuf='',pinMode='access';
 let npBuf='',npStep='enter',npFirst='';
 
@@ -598,16 +982,18 @@ function npk(k){
 }
 function updDots(pfx,buf){for(let i=0;i<4;i++){const d=document.getElementById(pfx+i);if(d)d.className='pdot'+(i<buf.length?' on':'');}}
 
-// ── TOGGLES ────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════
 function togBtn(el){el.classList.toggle('on');el.classList.toggle('off');}
 function setTog(id,v){const el=document.getElementById(id);if(!el)return;if(v){el.classList.add('on');el.classList.remove('off');}else{el.classList.remove('on');el.classList.add('off');}}
-
-// ── MODAL HELPERS ──────────────────────────────────────────
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
-['modAct','modRew','modPin','modNewPin'].forEach(id=>document.getElementById(id).addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');}));
+['modAct','modRew','modPin','modNewPin','modAlarm','modBonus'].forEach(id=>document.getElementById(id).addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');}));
 
-// ── PAGE NAV ───────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// PAGE NAV
+// ═══════════════════════════════════════════════════════════
 function goPage(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
@@ -620,8 +1006,29 @@ function goPage(name){
 }
 function renderAll(){renderHome();renderList();renderEdit();renderRewards();}
 
-// ── INIT ───────────────────────────────────────────────────
-function init(){
+// ═══════════════════════════════════════════════════════════
+// SERVICE WORKER
+// ═══════════════════════════════════════════════════════════
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('/mi-agenda/sw.js')
+      .then(r=>console.log('SW ok:',r.scope))
+      .catch(e=>console.log('SW err:',e));
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+async function init(){
+  // Check existing notification permission
+  if('Notification' in window&&Notification.permission==='granted'){
+    notifPermission=true;
+    scheduleNextNotif();
+  }
+  // Request wake lock
+  await requestWakeLock();
+
   const a=getActive();
   if(a&&a.dur>0){
     curId=a.id;initTimer(a);
@@ -633,15 +1040,6 @@ function init(){
   renderAll();goPage('home');
 }
 init();
-
-// ── SERVICE WORKER ─────────────────────────────────────────
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/mi-agenda/sw.js')
-      .then(r => console.log('SW registrado:', r.scope))
-      .catch(e => console.log('SW error:', e));
-  });
-}
 </script>
 </body>
 </html>
