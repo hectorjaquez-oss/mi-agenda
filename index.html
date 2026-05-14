@@ -585,18 +585,69 @@ function scheduleNextNotif(){
   },Math.min(msUntil,2147483647));
 }
 
-// Keep screen/lock screen visible via Wake Lock
+// ── WAKE LOCK — keeps screen on ──────────────────────────
 let wakeLock=null;
-async function requestWakeLock(){
+let wakeLockActive=false;
+// Fallback: tiny invisible video loop tricks Android into keeping screen on
+let noSleepVideo=null;
+
+function createNoSleepVideo(){
+  // 1x1 transparent video loop — classic no-sleep trick
+  const v=document.createElement('video');
+  v.setAttribute('loop','');v.setAttribute('playsinline','');
+  v.setAttribute('muted','');v.style.cssText='position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;top:0;left:0';
+  // Tiny valid MP4 base64 (1x1 black, 1 frame)
+  v.src='data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAAs1tZGF0AAACrgYF//+q3EXpvebZSLeWLNgg2SPu73gyNjQgLSBjb3JlIDE1MiByMjg1NCBlOWE1OTAzIC0gSC4yNjQvTVBFRy00IEFWQyBjb2RlYyAtIENvcHlsZWZ0IDIwMDMtMjAxNyAtIGh0dHA6Ly93d3cudmlkZW9sYW4ub3JnL3gyNjQuaHRtbCAtIG9wdGlvbnM6IGNhYmFjPTEgcmVmPTMgZGVibG9jaz0xOjA6MCBhbmFseXNlPTB4MzoweDExMyBtZT1oZXggc3VibWU9NyBwc3k9MSBwc3lfcmQ9MS4wMDowLjAwIG1peGVkX3JlZj0xIG1lX3JhbmdlPTE2IGNocm9tYV9tZT0xIHRyZWxsaXM9MSA4eDhkY3Q9MSBjcW09MCBkZWFkem9uZT0yMSwxMSBmYXN0X3Bza2lwPTEgY2hyb21hX3FwX29mZnNldD0tMiB0aHJlYWRzPTMgbG9va2FoZWFkX3RocmVhZHM9MSBzbGljZWRfdGhyZWFkcz0wIG5yPTAgZGVjaW1hdGU9MSBpbnRlcmxhY2VkPTAgYmx1cmF5X2NvbXBhdD0wIGNvbnN0cmFpbmVkX2ludHJhPTAgYmZyYW1lcz0zIGJfcHlyYW1pZD0yIGJfYWRhcHQ9MSBiX2JpYXM9MCBkaXJlY3Q9MSB3ZWlnaHRiPTEgb3Blbl9nb3A9MCB3ZWlnaHRwPTIga2V5aW50PTI1MCBrZXlpbnRfbWluPTEwIHNjZW5lY3V0PTQwIGludHJhX3JlZnJlc2g9MCByY19sb29rYWhlYWQ9NDAgcmM9Y3JmIG1idHJlZT0xIGNyZj0yMy4wIHFjb21wPTAuNjAgcXBtaW49MCBxcG1heD02OSBxcHN0ZXA9NCBpcF9yYXRpbz0xLjQwIGFxPTE6MS4wMACAAAAPZWxpYnggABf/ZdruPfFy0MmgnF5lkGDDMxCKvFaF8gAAADEB';
+  document.body.appendChild(v);
+  return v;
+}
+
+async function enableWakeLock(){
   try{
     if('wakeLock' in navigator){
       wakeLock=await navigator.wakeLock.request('screen');
-      wakeLock.addEventListener('release',()=>wakeLock=null);
+      wakeLock.addEventListener('release',()=>{wakeLock=null;});
+      wakeLockActive=true;
     }
   }catch(e){}
+  // Fallback video trick
+  try{
+    if(!noSleepVideo)noSleepVideo=createNoSleepVideo();
+    await noSleepVideo.play();
+    wakeLockActive=true;
+  }catch(e){}
+  updateWakeLockBtn();
 }
+
+async function disableWakeLock(){
+  try{if(wakeLock)await wakeLock.release();}catch(e){}
+  try{if(noSleepVideo){noSleepVideo.pause();}}catch(e){}
+  wakeLock=null;wakeLockActive=false;
+  updateWakeLockBtn();
+}
+
+function toggleWakeLock(){
+  if(wakeLockActive)disableWakeLock();
+  else enableWakeLock();
+}
+
+function updateWakeLockBtn(){
+  const btn=document.getElementById('wakeBtn');
+  if(!btn)return;
+  if(wakeLockActive){
+    btn.textContent='☀️ Pantalla: SIEMPRE ACTIVA';
+    btn.style.background='#059669';btn.style.color='#fff';
+  } else {
+    btn.textContent='💤 Pantalla: normal (toca para fijar)';
+    btn.style.background='#f3f4f6';btn.style.color='var(--tx)';
+  }
+}
+
+// Re-acquire on visibility change
 document.addEventListener('visibilitychange',async()=>{
-  if(document.visibilityState==='visible'&&!wakeLock)await requestWakeLock();
+  if(document.visibilityState==='visible'&&wakeLockActive){
+    if(!wakeLock)await enableWakeLock();
+  }
 });
 
 // ═══════════════════════════════════════════════════════════
@@ -642,8 +693,8 @@ function renderHome(){
   if(allOver){
     const done=ta.filter(a=>getStatus(a.id)==='done').length,miss=ta.filter(a=>getStatus(a.id)==='missed').length;
     const bonusTotal=S.bonusApplied?0:totalBonusStars();
-    c.innerHTML=`<div class="alldone"><div class="ad-em">🎉🌟🦋</div><h2>¡Día terminado!</h2><p>Completaste <b>${done}</b> de ${ta.length}${miss>0?` · <span style="color:var(--r)">⛔ ${miss} perdidas</span>`:''} actividades.</p><div class="sg"><div class="sc"><div class="sn">⭐${S.stars}</div><div class="sl">Estrellas ganadas</div></div><div class="sc"><div class="sn" style="font-size:18px">${fmtDur(S.savedSecs)}</div><div class="sl">Tiempo ahorrado</div></div></div>${bonusTotal>0?`<div class="notif-banner">⚡ Tienes +${bonusTotal} ⭐ de bonus disponibles!<button class="btn bp bsm" onclick="applyBonusesQuick()" style="margin-left:auto">Aplicar</button></div>`:''}  </div>`;
-    return;
+    c.innerHTML=`<div class="alldone"><div class="ad-em">🎉🌟🦋</div><h2>¡Día terminado!</h2><p>Completaste <b>${done}</b> de ${ta.length}${miss>0?` · <span style="color:var(--r)">⛔ ${miss} perdidas</span>`:''} actividades.</p><div class="sg"><div class="sc"><div class="sn">⭐${S.stars}</div><div class="sl">Estrellas ganadas</div></div><div class="sc"><div class="sn" style="font-size:18px">${fmtDur(S.savedSecs)}</div><div class="sl">Tiempo ahorrado</div></div></div>${bonusTotal>0?`<div class="notif-banner">⚡ Tienes +${bonusTotal} ⭐ de bonus disponibles!<button class="btn bp bsm" onclick="applyBonusesQuick()" style="margin-left:auto">Aplicar</button></div>`:''}</div><button id="wakeBtn" onclick="toggleWakeLock()" class="btn" style="width:100%;justify-content:center;margin-top:4px;font-size:12px;background:#f3f4f6;color:var(--tx);border-radius:12px;padding:10px">💤 Pantalla: normal (toca para fijar)</button>`;
+    updateWakeLockBtn();return;
   }
   const now=new Date(),nm=now.getHours()*60+now.getMinutes();
   const act=S.acts.find(a=>a.id===curId)||getActive();
@@ -688,7 +739,9 @@ function renderHome(){
   }
 
   html+=progCard(ta);
+  html+=`<button id="wakeBtn" onclick="toggleWakeLock()" class="btn" style="width:100%;justify-content:center;margin-top:2px;font-size:12px;background:#f3f4f6;color:var(--tx);border-radius:12px;padding:10px">💤 Pantalla: normal (toca para fijar)</button>`;
   c.innerHTML=html;
+  updateWakeLockBtn();
 }
 
 function progCard(acts){
@@ -698,7 +751,7 @@ function progCard(acts){
 
 async function activateNotifs(){
   await requestNotifPermission();
-  if(notifPermission){scheduleNextNotif();requestWakeLock();}
+  if(notifPermission){scheduleNextNotif();enableWakeLock();}
   renderHome();
 }
 function applyBonusesQuick(){
@@ -1026,8 +1079,6 @@ async function init(){
     notifPermission=true;
     scheduleNextNotif();
   }
-  // Request wake lock
-  await requestWakeLock();
 
   const a=getActive();
   if(a&&a.dur>0){
